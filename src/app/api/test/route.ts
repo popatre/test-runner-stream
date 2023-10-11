@@ -16,5 +16,4 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     //     headers: { "Content-type": "text/html" },
     // });
     return new NextResponse(stream);
-    return new ReadableStream(stream);
 }
