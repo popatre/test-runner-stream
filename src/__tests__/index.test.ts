@@ -257,3 +257,15 @@ test("200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async 
         .send(patchBody);
     assert.equal(response.status === 400 || response.status === 200, true);
 });
+
+test("204 - DELETE:/api/comments/:comment_id - should delete comment and respons with no comments", async () => {
+    await request(app).delete(`/api/comments/1`).expect(204);
+});
+
+test("404 - DELETE:/api/comments/:comment_id - comment not found", async () => {
+    await request(app).delete(`/api/comments/99999`).expect(404);
+});
+
+test("400 - DELETE:/api/comments/:comment_id - invalid comment id", async () => {
+    await request(app).delete(`/api/comments/not-an-id`).expect(400);
+});
