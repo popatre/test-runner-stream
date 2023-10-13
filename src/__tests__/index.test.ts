@@ -258,7 +258,7 @@ test("200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async 
     assert.equal(response.status === 400 || response.status === 200, true);
 });
 
-test("204 - DELETE:/api/comments/:comment_id - should delete comment and respons with no comments", async () => {
+test("204 - DELETE:/api/comments/:comment_id - should delete comment and responds with no content", async () => {
     await request(app).delete(`/api/comments/1`).expect(204);
 });
 
@@ -268,4 +268,27 @@ test("404 - DELETE:/api/comments/:comment_id - comment not found", async () => {
 
 test("400 - DELETE:/api/comments/:comment_id - invalid comment id", async () => {
     await request(app).delete(`/api/comments/not-an-id`).expect(400);
+});
+
+test("200 - GET:/api/users - responds with array of users", async () => {
+    const {
+        body: { users },
+    } = await request(app).get(`/api/users`).expect(200);
+
+    const isArray = Array.isArray(users);
+    assert.equal(isArray, true);
+    assert.equal(users.length, 4);
+
+    for (const user of users) {
+        assert.equal(
+            user.hasOwnProperty("username"),
+            true,
+            "DOES NOT HAVE USERNAME"
+        );
+        assert.equal(
+            user.hasOwnProperty("avatar_url"),
+            true,
+            "DOES NOT HAVE AVATAR URL ON OBJECT"
+        );
+    }
 });
