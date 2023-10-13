@@ -12,6 +12,7 @@ const testData = require("../../server/db/data/test-data/index");
 const seed = require("../../server/db/seeds/seed");
 
 beforeEach(() => seed(testData));
+
 // afterAll(() => db.end());
 
 // test("status 404 - not a route/path", async () => {
@@ -99,4 +100,160 @@ test("200 - GET:/api/articles - sorted by descending date", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
 
     assert.equal(body.articles[0].article_id, 3);
+});
+
+test("200 - GET:/api/articles/:article_id/comments - status 200", async () => {
+    await request(app).get("/api/articles/1/comments").expect(200);
+});
+
+test("200 - GET:/api/articles/:article_id/comments - should respond with comments arrays", async () => {
+    const {
+        body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+
+    const isArray = Array.isArray(comments);
+    assert.equal(isArray, true);
+    assert.equal(comments.length > 0, true);
+    for (const comment of comments) {
+        assert.equal(comment.hasOwnProperty("comment_id"), true);
+        assert.equal(comment.hasOwnProperty("votes"), true);
+        assert.equal(comment.hasOwnProperty("created_at"), true);
+        assert.equal(comment.hasOwnProperty("author"), true);
+        assert.equal(comment.hasOwnProperty("body"), true);
+    }
+});
+
+test("200 - GET:/api/articles/:article_id/comments - serve an empty array when the article exists but has no comments", async () => {
+    const {
+        body: { comments },
+    } = await request(app).get("/api/articles/2/comments").expect(200);
+    const isArray = Array.isArray(comments);
+    assert.equal(isArray, true);
+    assert.equal(comments.length, 0);
+});
+
+test("404 - GET:/api/articles/:article_id/comments - Not Found when given a valid `article_id`", async () => {
+    await request(app).get("/api/articles/999999/comments").expect(404);
+});
+
+test("400 - GET:/api/articles/:article_id/comments - Bad Request when given an invalid `article_id`", async () => {
+    await request(app).get("/api/articles/not-an-id/comments").expect(400);
+});
+
+test("201 - POST:/api/articles/:article_id/comments - should post and respond with new comment", async () => {
+    const postBody = { username: "butter_bridge", body: "this is a comment" };
+    const articleId = 1;
+    const {
+        body: { comment },
+    } = await request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(postBody)
+        .expect(201);
+    assert.equal(comment.hasOwnProperty("comment_id"), true);
+    assert.equal(comment.hasOwnProperty("votes"), true);
+    assert.equal(comment.hasOwnProperty("created_at"), true);
+    assert.equal(comment.hasOwnProperty("author"), true);
+    assert.equal(comment.hasOwnProperty("body"), true);
+
+    assert.equal(comment.author, postBody.username);
+    assert.equal(comment.body, postBody.body);
+    assert.equal(comment.article_id, articleId);
+    assert.equal(comment.votes, 0);
+});
+
+test("404 - POST:/api/articles/:article_id/comments - username not found", async () => {
+    const postBody = { username: "notUser", body: "this is a comment" };
+    const articleId = 1;
+    await request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(postBody)
+        .expect(404);
+});
+
+test("404 - POST:/api/articles/:article_id/comments - article not found", async () => {
+    const postBody = { username: "butter_bridge", body: "this is a comment" };
+    const articleId = 99999;
+    await request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(postBody)
+        .expect(404);
+});
+
+test("400 - POST:/api/articles/:article_id/comments - invalid article id", async () => {
+    const postBody = { username: "butter_bridge", body: "this is a comment" };
+    const articleId = "not-an-id";
+    await request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(postBody)
+        .expect(400);
+});
+
+test("400 - POST:/api/articles/:article_id/comments - missing required field", async () => {
+    const postBody = { username: "butter_bridge" };
+    const articleId = "not-an-id";
+    await request(app)
+        .post(`/api/articles/${articleId}/comments`)
+        .send(postBody)
+        .expect(400);
+});
+
+test("200 - PATCH:/api/articles/:article_id - should increment votes and respond with article", async () => {
+    const patchBody = { inc_votes: 1 };
+    const articleId = 1;
+    const {
+        body: { article },
+    } = await request(app)
+        .patch(`/api/articles/${articleId}`)
+        .send(patchBody)
+        .expect(200);
+
+    assert.equal(article.votes, 101);
+});
+
+test("200 - PATCH:/api/articles/:article_id - should decrement votes and respond with article", async () => {
+    const patchBody = { inc_votes: -1 };
+    const articleId = 1;
+    const {
+        body: { article },
+    } = await request(app)
+        .patch(`/api/articles/${articleId}`)
+        .send(patchBody)
+        .expect(200);
+
+    assert.equal(article.votes, 99);
+});
+
+test("404 - PATCH:/api/articles/:article_id - article not found", async () => {
+    const patchBody = { inc_votes: 1 };
+    const articleId = 99999;
+    await request(app)
+        .patch(`/api/articles/${articleId}`)
+        .send(patchBody)
+        .expect(404);
+});
+test("400 - PATCH:/api/articles/:article_id - invalid id", async () => {
+    const patchBody = { inc_votes: 1 };
+    const articleId = "not-an-id";
+    await request(app)
+        .patch(`/api/articles/${articleId}`)
+        .send(patchBody)
+        .expect(400);
+});
+
+test("400 - PATCH:/api/articles/:article_id - inc votes not an integer", async () => {
+    const patchBody = { inc_votes: "hello" };
+    const articleId = 1;
+    await request(app)
+        .patch(`/api/articles/${articleId}`)
+        .send(patchBody)
+        .expect(400);
+});
+
+test("200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async () => {
+    const patchBody = { inc_vo: 1 };
+    const articleId = 1;
+    const response = await request(app)
+        .patch(`/api/articles/${articleId}`)
+        .send(patchBody);
+    assert.equal(response.status === 400 || response.status === 200, true);
 });

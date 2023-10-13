@@ -28,5 +28,5 @@ export default async function Reader({
 }
 
 function Loading() {
-    return <h2>Testing...</h2>;
+    return <h2 className="uppercase font-bold text-xl">Testing...</h2>;
 }
