@@ -8,15 +8,38 @@ export default async function Home() {
         method: "GET",
     });
 
-    const reader = stream.body?.getReader();
-
-    if (!reader) return <p>something went wrong</p>;
+    const parsedStreamData = await stream.json();
+    console.log(parsedStreamData, "&*&*&*&*&*");
 
     return (
-        <Suspense fallback={<Loading />}>
-            <Reader reader={reader} />
-        </Suspense>
+        <div>
+            {parsedStreamData.report.tests.map((test: any) => {
+                console.log(test, "((((9");
+                return (
+                    <div className="border-solid border-black border-2 p-5 my-5 w-4/5 ">
+                        <h2>{test.name}</h2>
+                        <h2>
+                            {test.failure
+                                ? `${test.failure.failureType} ❌`
+                                : `✅`}
+                        </h2>
+                        <p>{test.failure && test.failure.cause.code}</p>
+                        {/* <p>{test.failure && test?.failure.cause}</p> */}
+                    </div>
+                );
+            })}
+        </div>
     );
+
+    // const reader = stream.body?.getReader();
+
+    // if (!reader) return <p>something went wrong</p>;
+
+    // return (
+    //     <Suspense fallback={<Loading />}>
+    //         <Reader reader={reader} />
+    //     </Suspense>
+    // );
 }
 
 function Loading() {

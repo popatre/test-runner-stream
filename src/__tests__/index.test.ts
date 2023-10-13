@@ -292,3 +292,5 @@ test("200 - GET:/api/users - responds with array of users", async () => {
         );
     }
 });
+
+// https://github.com/northcoders/backend-review-guidance/blob/main/news-checklist.md

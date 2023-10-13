@@ -1,17 +1,21 @@
 import { tap } from "node:test/reporters";
 import { run } from "node:test";
+import parseReport, { Report } from "node-test-parser";
 
 import { NextRequest, NextResponse } from "next/server";
+import { NextApiResponse } from "next";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+type ResponseData = { report: Report };
+
+export async function GET(
+    req: NextRequest,
+    res: NextApiResponse<ResponseData>
+) {
     const stream: any = run({
         files: [`${__dirname}/../../../../../src/__tests__/index.test.ts`],
-    }).compose(tap);
+    });
 
-    // return new StreamingTextResponse(stream);
+    const report = await parseReport(stream);
 
-    // return new StreamingTextResponse(stream, {
-    //     headers: { "Content-type": "text/html" },
-    // });
-    return new NextResponse(stream);
+    return NextResponse.json({ report });
 }
