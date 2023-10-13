@@ -13,8 +13,12 @@ export default async function Home() {
     if (!reader) return <p>something went wrong</p>;
 
     return (
-        <Suspense>
+        <Suspense fallback={<Loading />}>
             <Reader reader={reader} />
         </Suspense>
     );
+}
+
+function Loading() {
+    return <h2>Loading...</h2>;
 }

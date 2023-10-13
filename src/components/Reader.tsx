@@ -20,9 +20,13 @@ export default async function Reader({
     return (
         <span>
             <TextContainer text={text} />
-            <Suspense>
+            <Suspense fallback={<Loading />}>
                 <Reader reader={reader} />
             </Suspense>
         </span>
     );
+}
+
+function Loading() {
+    return <h2>Testing...</h2>;
 }

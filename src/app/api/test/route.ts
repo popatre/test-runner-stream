@@ -1,11 +1,9 @@
 import { tap } from "node:test/reporters";
 import { run } from "node:test";
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
-import { pipeline } from "stream";
-import { StreamingTextResponse, streamToResponse } from "ai";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(req: NextRequest, res: NextResponse) {
     const stream: any = run({
         files: [`${__dirname}/../../../../../src/__tests__/index.test.ts`],
     }).compose(tap);
