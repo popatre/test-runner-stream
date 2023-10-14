@@ -1,17 +1,10 @@
-import { tap } from "node:test/reporters";
-import { run } from "node:test";
-import parseReport, { Report } from "node-test-parser";
-
-import { NextRequest, NextResponse } from "next/server";
-import { NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import generateReport from "@/utils/generateReport";
 
 export async function GET() {
-    const stream: any = run({
-        files: [`${__dirname}/../../../../../src/__tests__/index.test.ts`],
-    });
+    const path = `${__dirname}/../../../../../src/__tests__/index.test.ts`;
 
-    const report = await parseReport(stream);
-    console.log(report, "**************");
+    const report = await generateReport(path);
 
     return NextResponse.json({ report });
 }

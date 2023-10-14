@@ -14,9 +14,14 @@ export default async function Home() {
     return (
         <div>
             {parsedStreamData.report.tests.map((test: any) => {
-                console.log(test, "((((9");
+                const resultColourStyles =
+                    test.failure || test.error
+                        ? `bg-red-500`
+                        : `bg-emerald-400`;
                 return (
-                    <div className="border-solid border-black border-2 p-5 my-5 w-4/5 ">
+                    <div
+                        className={`border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${resultColourStyles}`}
+                    >
                         <h2>{test.name}</h2>
                         <h2>{test.failure || test.error ? `❌` : `✅`}</h2>
                         <p>{test.error && test.error.cause.name}</p>
