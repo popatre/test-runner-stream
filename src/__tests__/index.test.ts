@@ -131,7 +131,7 @@ test("200 - GET:/api/articles/:article_id/comments - serve an empty array when t
     assert.equal(comments.length, 0);
 });
 
-test("404 - GET:/api/articles/:article_id/comments - Not Found when given a valid `article_id`", async () => {
+test("404 - GET:/api/articles/:article_id/comments - Not Found when given a valid `article_id` not in db", async () => {
     await request(app).get("/api/articles/999999/comments").expect(404);
 });
 

@@ -9,7 +9,6 @@ export default async function Home() {
     });
 
     const parsedStreamData = await stream.json();
-    console.log(parsedStreamData, "&*&*&*&*&*");
 
     return (
         <div>
@@ -18,16 +17,19 @@ export default async function Home() {
                     test.failure || test.error
                         ? `bg-red-500`
                         : `bg-emerald-400`;
+                console.log(test, "******");
                 return (
-                    <div
-                        className={`border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${resultColourStyles}`}
-                    >
-                        <h2>{test.name}</h2>
-                        <h2>{test.failure || test.error ? `❌` : `✅`}</h2>
-                        <p>{test.error && test.error.cause.name}</p>
-                        <p>{test.failure && test.failure.cause.code}</p>
-                        {/* <p>{test.failure && test?.failure.cause}</p> */}
-                    </div>
+                    !test.skip && (
+                        <div
+                            className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${resultColourStyles}`}
+                        >
+                            <h2>{test.name}</h2>
+                            <h2>{test.failure || test.error ? `❌` : `✅`}</h2>
+                            <p>{test.error && test.error.cause.name}</p>
+                            <p>{test.failure && test.failure.cause.code}</p>
+                            {/* <p>{test.failure && test?.failure.cause}</p> */}
+                        </div>
+                    )
                 );
             })}
         </div>
