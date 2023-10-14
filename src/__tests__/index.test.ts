@@ -15,13 +15,9 @@ beforeEach(() => seed(testData));
 
 after(() => db.end());
 
-// test("status 404 - not a route/path", async () => {
-//     const { body } = await request(app).get("/api/badroute").expect(404);
-//     // console.log(response, "*****");
-//     const expected = "invalid url";
-
-//     assert.equal(body.message, expected);
-// });
+test("404 - GET:/api/topics - not a route/path (could be done as part of any test)", async () => {
+    await request(app).get("/api/badroute").expect(404);
+});
 
 test("200 - GET:/api/topics - respond with list of topics ", async () => {
     const { body } = await request(app).get("/api/topics").expect(200);
@@ -343,4 +339,20 @@ test("400 - GET:/api/articles(queries) - 400 when passed invalid sort by column"
 
 test("400 - GET:/api/articles(queries) - 400 when passed invalid order", async () => {
     await request(app).get(`/api/articles?order=not-an-order`).expect(400);
+});
+
+test("200 -  GET:/api/articles/:article_id(comment_count) - should have comment count", async () => {
+    const {
+        body: { article },
+    } = await request(app).get(`/api/articles/1`).expect(200);
+    assert.equal(+article.comment_count, 11);
+});
+
+test("200 -  GET:/api/articles/:article_id(comment_count) - should have comment count even when there are no comments for article", async () => {
+    const {
+        body: { article },
+    } = await request(app).get(`/api/articles/2`).expect(200);
+    const error = new Error();
+    error.name = "NO COMMENT COUNT - HAVE THEY JOINED CORRECTLY?";
+    assert.equal(+article.comment_count, 0, error);
 });
