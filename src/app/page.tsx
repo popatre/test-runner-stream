@@ -18,11 +18,8 @@ export default async function Home() {
                 return (
                     <div className="border-solid border-black border-2 p-5 my-5 w-4/5 ">
                         <h2>{test.name}</h2>
-                        <h2>
-                            {test.failure
-                                ? `${test.failure.failureType} ❌`
-                                : `✅`}
-                        </h2>
+                        <h2>{test.failure || test.error ? `❌` : `✅`}</h2>
+                        <p>{test.error && test.error.cause.name}</p>
                         <p>{test.failure && test.failure.cause.code}</p>
                         {/* <p>{test.failure && test?.failure.cause}</p> */}
                     </div>

@@ -1,7 +1,7 @@
 // https://github.com/nearform/node-test-parser#node-test-parser
 process.env.PGDATABASE = "nc_news_test";
 
-const { test, describe, beforeEach, afterAll } = require("node:test");
+const { test, describe, beforeEach, after } = require("node:test");
 const assert = require("node:assert/strict");
 const request = require("supertest");
 const db = require("../../server/db/connection");
@@ -13,7 +13,7 @@ const seed = require("../../server/db/seeds/seed");
 
 beforeEach(() => seed(testData));
 
-// afterAll(() => db.end());
+after(() => db.end());
 
 // test("status 404 - not a route/path", async () => {
 //     const { body } = await request(app).get("/api/badroute").expect(404);
@@ -92,8 +92,11 @@ test("200 - GET:/api/articles - should not contain body property", async () => {
 
     assert.equal(articles.length > 0, true);
 
+    const error = new Error();
+    error.name = "BODY KEY IS PRESENT";
+
     for (const article of articles) {
-        assert.equal(article.hasOwnProperty("body"), false);
+        assert.equal(article.hasOwnProperty("body"), false, error);
     }
 });
 test("200 - GET:/api/articles - sorted by descending date", async () => {
@@ -276,21 +279,68 @@ test("200 - GET:/api/users - responds with array of users", async () => {
     } = await request(app).get(`/api/users`).expect(200);
 
     const isArray = Array.isArray(users);
-    assert.equal(isArray, true);
+    const error0 = new Error();
+    error0.name =
+        "HAS NOT RETURNED ARRAY - OR HASNT USED CORRECT KEY ON OBJECT";
+    assert.equal(isArray, true, error0);
+
     assert.equal(users.length, 4);
 
     for (const user of users) {
-        assert.equal(
-            user.hasOwnProperty("username"),
-            true,
-            "DOES NOT HAVE USERNAME"
-        );
-        assert.equal(
-            user.hasOwnProperty("avatar_url"),
-            true,
-            "DOES NOT HAVE AVATAR URL ON OBJECT"
-        );
+        const error2 = new Error();
+        error2.name = "MISSING USERNAME";
+        assert.equal(user.hasOwnProperty("username"), true, error2);
+        const error3 = new Error();
+        error3.name = "MISSING AVATAR URL";
+        assert.equal(user.hasOwnProperty("avatar_url"), true, error3);
     }
 });
 
-// https://github.com/northcoders/backend-review-guidance/blob/main/news-checklist.md
+test("200 - GET:/api/articles(queries) - accept a sort_by query", async () => {
+    const {
+        body: { articles },
+    } = await request(app).get(`/api/articles?sort_by=author`).expect(200);
+
+    assert.equal(articles[0].author, "rogersop");
+    assert.equal(articles[1].author, "rogersop");
+    assert.equal(articles[2].author, "rogersop");
+});
+
+test("200 - GET:/api/articles(queries) - accept an `order` query", async () => {
+    const {
+        body: { articles },
+    } = await request(app).get(`/api/articles?order=asc`).expect(200);
+
+    assert.equal(articles[0].title, "Z");
+});
+
+test("200 - GET:/api/articles(queries) - accept an `topic` query", async () => {
+    const {
+        body: { articles },
+    } = await request(app).get(`/api/articles?topic=mitch`).expect(200);
+    const error = new Error();
+    error.name = "NOT ALL THE REQUESTED TOPIC";
+    for (const { topic } of articles) {
+        assert.equal(topic, "mitch", error);
+    }
+});
+
+test("200 - GET:/api/articles(queries) - valid topic with no articles", async () => {
+    const {
+        body: { articles },
+    } = await request(app).get(`/api/articles?topic=paper`).expect(200);
+    assert.equal(Array.isArray(articles), true);
+    assert.equal(articles.length, 0);
+});
+
+test("404 - GET:/api/articles(queries) - 404 when provided a non-existent topic", async () => {
+    await request(app).get(`/api/articles?topic=not-a-topic`).expect(404);
+});
+
+test("400 - GET:/api/articles(queries) - 400 when passed invalid sort by column", async () => {
+    await request(app).get(`/api/articles?sort_by=not-a-column`).expect(400);
+});
+
+test("400 - GET:/api/articles(queries) - 400 when passed invalid order", async () => {
+    await request(app).get(`/api/articles?order=not-an-order`).expect(400);
+});
