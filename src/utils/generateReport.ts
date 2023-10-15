@@ -6,7 +6,7 @@ export default async function generateReport(
     testName?: string | undefined
 ) {
     const testPattern = testName ? new RegExp(testName) : undefined;
-    console.log(testPattern);
+
     const stream: any = run({
         files: [testPath],
         testNamePatterns: testPattern,

@@ -17,7 +17,7 @@ export default async function Home() {
                     test.failure || test.error
                         ? `bg-red-500`
                         : `bg-emerald-400`;
-                console.log(test, "******");
+
                 return (
                     !test.skip && (
                         <div
