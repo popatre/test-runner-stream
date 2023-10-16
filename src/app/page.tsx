@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Dna, FidgetSpinner } from "react-loader-spinner";
 
 type Props = {};
 
@@ -19,14 +20,40 @@ export default function page({}: Props) {
             setIsCloned(true);
             setIsLoading(false);
             router.push("/report");
-        } catch (error) {}
+        } catch (error) {
+            setIsError(true);
+            setIsLoading(false);
+        }
     };
+
+    if (isError) return <p>Something went wrong</p>;
 
     return (
         <div>
-            <button onClick={handleClick}>Click me</button>
-            {isLoading && <p>Loading...</p>}
-            {isCloned && <h1>Cloned successfully</h1>}
+            <button disabled={isLoading || isCloned} onClick={handleClick}>
+                Click me
+            </button>
+            {isLoading && (
+                <div>
+                    <h2>Cloning repo in the cloning lab</h2>
+                    <Dna height="80" width="80" ariaLabel="loading" />
+                </div>
+            )}
+            {isCloned && (
+                <div>
+                    <h1>Testing - You will be redirected soon</h1>
+                    <FidgetSpinner
+                        visible={true}
+                        height="80"
+                        width="80"
+                        ariaLabel="dna-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="dna-wrapper"
+                        ballColors={["#ff0000", "#00ff00", "#0000ff"]}
+                        backgroundColor="#F4442E"
+                    />
+                </div>
+            )}
         </div>
     );
 }

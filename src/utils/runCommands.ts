@@ -9,7 +9,6 @@ export async function runCommands(
     working_dir: string
 ) {
     console.log(working_dir, "******");
-    // before clone - remove whats there already
     const gitClone = `git clone -b ${branch} ${repoUrl} ${working_dir}`;
 
     const setupDbs = `psql -f ${__dirname}/../../../../../src/setup-db/${appType}/setup-test-db.sql`;
