@@ -5,11 +5,15 @@ const assert = require("node:assert/strict");
 const request = require("supertest");
 
 const testData = require("./test-server/db/data/test-data/index");
+
+/* to connect to test database
 const seed = require("./test-server/db/seeds/seed");
-
 const db = require("./test-server/db/connection");
-// const testApp = require("./test-server/app");
+const app = require("./test-server/app");
+*/
 
+const seed = require("../evaluations/student/db/seeds/seed");
+const db = require("../evaluations/student/db/connection");
 const app = require("../evaluations/student/app");
 
 beforeEach(() => seed(testData));
