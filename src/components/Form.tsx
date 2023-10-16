@@ -16,6 +16,9 @@ type Props = {
     setIsError: Dispatch<SetStateAction<boolean>>;
 };
 
+// add the test they are doing
+// pass to api query
+
 function Form({ setIsLoading, setIsCloned, setIsError }: Props) {
     const [input, setInput] = useState({
         repo: "",

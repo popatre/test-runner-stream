@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Dna, FidgetSpinner } from "react-loader-spinner";
 import Form from "@/components/Form";
+import styles from "../styles/Home.module.css";
 
 type Props = {};
 
@@ -38,10 +39,13 @@ export default function page({}: Props) {
         );
 
     return (
-        <Form
-            setIsCloned={setIsCloned}
-            setIsLoading={setIsLoading}
-            setIsError={setIsError}
-        />
+        <main className={styles.main}>
+            <h1>BE Test Runner</h1>
+            <Form
+                setIsCloned={setIsCloned}
+                setIsLoading={setIsLoading}
+                setIsError={setIsError}
+            />
+        </main>
     );
 }
