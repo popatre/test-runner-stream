@@ -26,7 +26,23 @@ export default async function Home() {
         itOnlysFound,
         describeOnlysFound,
     ]);
-    console.log(onlysFound, "))))))))))))");
+
+    const isOnlysPresent = (
+        onlyResults: [
+            string | undefined,
+            string | undefined,
+            string | undefined
+        ]
+    ) => {
+        for (const result of onlyResults) {
+            if (result && result.length > 0) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    console.log(onlysFound, "))))))");
 
     return (
         <div>
@@ -41,8 +57,11 @@ export default async function Home() {
                         <div
                             className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${resultColourStyles}`}
                         >
-                            <h2>{test.name}</h2>
-                            <h2>{test.failure || test.error ? `❌` : `✅`}</h2>
+                            <h2>
+                                {test.failure || test.error ? `❌` : `✅`}{" "}
+                                {test.name}
+                            </h2>
+
                             <p>{test.error && test.error.cause.name}</p>
                             <p>{test.failure && test.failure.cause.code}</p>
                             {/* <p>{test.failure && test?.failure.cause}</p> */}
@@ -50,24 +69,31 @@ export default async function Home() {
                     )
                 );
             })}
-            {/* <h2>{logsFound}</h2> */}
 
             <pre className="" style={{ whiteSpace: "pre-wrap" }}>
                 <div
-                    className={`font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md`}
+                    className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
+                        logsFound?.length ? `bg-red-500` : `bg-emerald-400`
+                    }`}
                 >
                     <h2>Console logs found: </h2>
-                    {logsFound}
+                    {logsFound?.length ? `${logsFound}` : "none"}
                 </div>
             </pre>
             <pre className="" style={{ whiteSpace: "pre-wrap" }}>
                 <div
-                    className={`font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md`}
+                    className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
+                        isOnlysPresent(onlysFound)
+                            ? `bg-red-500`
+                            : `bg-emerald-400`
+                    }`}
                 >
                     <h2>.onlys found: </h2>
-                    {onlysFound.map((result) => {
-                        return <h2>{result}</h2>;
-                    })}
+                    {isOnlysPresent(onlysFound)
+                        ? onlysFound.map((result) => {
+                              return <h2>{result}</h2>;
+                          })
+                        : `✅ none`}
                 </div>
             </pre>
         </div>
