@@ -1,15 +1,16 @@
-// https://github.com/nearform/node-test-parser#node-test-parser
 process.env.PGDATABASE = "nc_news_test";
 
 const { test, describe, beforeEach, after } = require("node:test");
 const assert = require("node:assert/strict");
 const request = require("supertest");
-const db = require("../../server/db/connection");
 
-const app = require("../../server/app");
+const testData = require("./test-server/db/data/test-data/index");
+const seed = require("./test-server/db/seeds/seed");
 
-const testData = require("../../server/db/data/test-data/index");
-const seed = require("../../server/db/seeds/seed");
+const db = require("./test-server/db/connection");
+// const testApp = require("./test-server/app");
+
+const app = require("../evaluations/student/app");
 
 beforeEach(() => seed(testData));
 
