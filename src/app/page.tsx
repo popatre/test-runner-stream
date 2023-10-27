@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dna, FidgetSpinner } from "react-loader-spinner";
 import Form from "@/components/Form";
 import styles from "../styles/Home.module.css";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -12,7 +13,11 @@ export default function page({}: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
 
-    if (isError) return <p>Something went wrong</p>;
+    const router = useRouter();
+
+    if (isError) {
+        router.push(`/error`);
+    }
 
     if (isLoading)
         return (

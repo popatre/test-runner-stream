@@ -44,7 +44,14 @@ function Form({ setIsLoading, setIsCloned, setIsError }: Props) {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await fetch("http://localhost:3000/api/clone");
+            const response = await fetch(
+                `http://localhost:3000/api/clone?repo=${input.repo}&branch=${input.branch}&app=${input.appType}`
+            );
+
+            if (!response.ok) {
+                throw new Error();
+            }
+
             setIsCloned(true);
             setIsLoading(false);
 
