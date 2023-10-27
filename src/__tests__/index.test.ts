@@ -20,11 +20,11 @@ beforeEach(() => seed(testData));
 
 after(() => db.end());
 
-test("404 - GET:/api/topics - not a route/path (could be done as part of any test)", async () => {
+test("ticket-3: 404 - GET:/api/topics - not a route/path (could be done as part of any test)", async () => {
     await request(app).get("/api/badroute").expect(404);
 });
 
-test("200 - GET:/api/topics - respond with list of topics ", async () => {
+test("ticket-3: 200 - GET:/api/topics - respond with list of topics ", async () => {
     const { body } = await request(app).get("/api/topics").expect(200);
     const expected = {
         slug: "mitch",
@@ -34,7 +34,7 @@ test("200 - GET:/api/topics - respond with list of topics ", async () => {
     assert.equal(body.topics.length, 3);
 });
 
-test("200 - GET:/api/articles/:article_id - returns articles object correctly based on id ", async () => {
+test("ticket-4: 200 - GET:/api/articles/:article_id - returns articles object correctly based on id ", async () => {
     const {
         body: { article },
     } = await request(app).get("/api/articles/1").expect(200);
@@ -57,21 +57,21 @@ test("200 - GET:/api/articles/:article_id - returns articles object correctly ba
     assert.equal(article.topic, expected.topic);
 });
 
-test("404 - GET:/api/articles/:article_id - return 404 for article not found", async () => {
+test("ticket-4: 404 - GET:/api/articles/:article_id - return 404 for article not found", async () => {
     await request(app).get("/api/articles/1000000").expect(404);
 });
 
-test("400 - GET:/api/articles/:article_id - return 400 bad article id request", async () => {
+test("ticket-4: 400 - GET:/api/articles/:article_id - return 400 bad article id request", async () => {
     await request(app).get("/api/articles/not-an-id").expect(400);
 });
 
-test("200 - GET:/api/articles - should respond with articles array", async () => {
+test("ticket-5: 200 - GET:/api/articles - should respond with articles array", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     const isArray = Array.isArray(body.articles);
     assert.equal(isArray, true);
 });
 
-test("200 - GET:/api/articles - should respond with all articles", async () => {
+test("ticket-5: 200 - GET:/api/articles - should respond with all articles", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     assert.equal(body.articles.length > 0, true);
 
@@ -86,7 +86,7 @@ test("200 - GET:/api/articles - should respond with all articles", async () => {
     }
 });
 
-test("200 - GET:/api/articles - should not contain body property", async () => {
+test("ticket-5: 200 - GET:/api/articles - should not contain body property", async () => {
     const {
         body: { articles },
     } = await request(app).get("/api/articles").expect(200);
@@ -100,17 +100,17 @@ test("200 - GET:/api/articles - should not contain body property", async () => {
         assert.equal(article.hasOwnProperty("body"), false, error);
     }
 });
-test("200 - GET:/api/articles - sorted by descending date", async () => {
+test("ticket-5: 200 - GET:/api/articles - sorted by descending date", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
 
     assert.equal(body.articles[0].article_id, 3);
 });
 
-test("200 - GET:/api/articles/:article_id/comments - status 200", async () => {
+test("ticket-6: 200 - GET:/api/articles/:article_id/comments - status 200", async () => {
     await request(app).get("/api/articles/1/comments").expect(200);
 });
 
-test("200 - GET:/api/articles/:article_id/comments - should respond with comments arrays", async () => {
+test("ticket-6: 200 - GET:/api/articles/:article_id/comments - should respond with comments arrays", async () => {
     const {
         body: { comments },
     } = await request(app).get("/api/articles/1/comments").expect(200);
@@ -127,7 +127,7 @@ test("200 - GET:/api/articles/:article_id/comments - should respond with comment
     }
 });
 
-test("200 - GET:/api/articles/:article_id/comments - serve an empty array when the article exists but has no comments", async () => {
+test("ticket-6: 200 - GET:/api/articles/:article_id/comments - serve an empty array when the article exists but has no comments", async () => {
     const {
         body: { comments },
     } = await request(app).get("/api/articles/2/comments").expect(200);
@@ -136,15 +136,15 @@ test("200 - GET:/api/articles/:article_id/comments - serve an empty array when t
     assert.equal(comments.length, 0);
 });
 
-test("404 - GET:/api/articles/:article_id/comments - Not Found when given a valid `article_id` not in db", async () => {
+test("ticket-6: 404 - GET:/api/articles/:article_id/comments - Not Found when given a valid `article_id` not in db", async () => {
     await request(app).get("/api/articles/999999/comments").expect(404);
 });
 
-test("400 - GET:/api/articles/:article_id/comments - Bad Request when given an invalid `article_id`", async () => {
+test("ticket-6: 400 - GET:/api/articles/:article_id/comments - Bad Request when given an invalid `article_id`", async () => {
     await request(app).get("/api/articles/not-an-id/comments").expect(400);
 });
 
-test("201 - POST:/api/articles/:article_id/comments - should post and respond with new comment", async () => {
+test("ticket-7: 201 - POST:/api/articles/:article_id/comments - should post and respond with new comment", async () => {
     const postBody = { username: "butter_bridge", body: "this is a comment" };
     const articleId = 1;
     const {
@@ -165,7 +165,7 @@ test("201 - POST:/api/articles/:article_id/comments - should post and respond wi
     assert.equal(comment.votes, 0);
 });
 
-test("404 - POST:/api/articles/:article_id/comments - username not found", async () => {
+test("ticket-7: 404 - POST:/api/articles/:article_id/comments - username not found", async () => {
     const postBody = { username: "notUser", body: "this is a comment" };
     const articleId = 1;
     await request(app)
@@ -174,7 +174,7 @@ test("404 - POST:/api/articles/:article_id/comments - username not found", async
         .expect(404);
 });
 
-test("404 - POST:/api/articles/:article_id/comments - article not found", async () => {
+test("ticket-7: 404 - POST:/api/articles/:article_id/comments - article not found", async () => {
     const postBody = { username: "butter_bridge", body: "this is a comment" };
     const articleId = 99999;
     await request(app)
@@ -183,7 +183,7 @@ test("404 - POST:/api/articles/:article_id/comments - article not found", async 
         .expect(404);
 });
 
-test("400 - POST:/api/articles/:article_id/comments - invalid article id", async () => {
+test("ticket-7: 400 - POST:/api/articles/:article_id/comments - invalid article id", async () => {
     const postBody = { username: "butter_bridge", body: "this is a comment" };
     const articleId = "not-an-id";
     await request(app)
@@ -192,7 +192,7 @@ test("400 - POST:/api/articles/:article_id/comments - invalid article id", async
         .expect(400);
 });
 
-test("400 - POST:/api/articles/:article_id/comments - missing required field", async () => {
+test("ticket-7: 400 - POST:/api/articles/:article_id/comments - missing required field", async () => {
     const postBody = { username: "butter_bridge" };
     const articleId = "not-an-id";
     await request(app)
@@ -201,7 +201,7 @@ test("400 - POST:/api/articles/:article_id/comments - missing required field", a
         .expect(400);
 });
 
-test("200 - PATCH:/api/articles/:article_id - should increment votes and respond with article", async () => {
+test("ticket-8: 200 - PATCH:/api/articles/:article_id - should increment votes and respond with article", async () => {
     const patchBody = { inc_votes: 1 };
     const articleId = 1;
     const {
@@ -214,7 +214,7 @@ test("200 - PATCH:/api/articles/:article_id - should increment votes and respond
     assert.equal(article.votes, 101);
 });
 
-test("200 - PATCH:/api/articles/:article_id - should decrement votes and respond with article", async () => {
+test("ticket-8: 200 - PATCH:/api/articles/:article_id - should decrement votes and respond with article", async () => {
     const patchBody = { inc_votes: -1 };
     const articleId = 1;
     const {
@@ -227,7 +227,7 @@ test("200 - PATCH:/api/articles/:article_id - should decrement votes and respond
     assert.equal(article.votes, 99);
 });
 
-test("404 - PATCH:/api/articles/:article_id - article not found", async () => {
+test("ticket-8: 404 - PATCH:/api/articles/:article_id - article not found", async () => {
     const patchBody = { inc_votes: 1 };
     const articleId = 99999;
     await request(app)
@@ -235,7 +235,7 @@ test("404 - PATCH:/api/articles/:article_id - article not found", async () => {
         .send(patchBody)
         .expect(404);
 });
-test("400 - PATCH:/api/articles/:article_id - invalid id", async () => {
+test("ticket-8: 400 - PATCH:/api/articles/:article_id - invalid id", async () => {
     const patchBody = { inc_votes: 1 };
     const articleId = "not-an-id";
     await request(app)
@@ -244,7 +244,7 @@ test("400 - PATCH:/api/articles/:article_id - invalid id", async () => {
         .expect(400);
 });
 
-test("400 - PATCH:/api/articles/:article_id - inc votes not an integer", async () => {
+test("ticket-8: 400 - PATCH:/api/articles/:article_id - inc votes not an integer", async () => {
     const patchBody = { inc_votes: "hello" };
     const articleId = 1;
     await request(app)
@@ -253,7 +253,7 @@ test("400 - PATCH:/api/articles/:article_id - inc votes not an integer", async (
         .expect(400);
 });
 
-test("200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async () => {
+test("ticket-8: 200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async () => {
     const patchBody = { inc_vo: 1 };
     const articleId = 1;
     const response = await request(app)
@@ -262,19 +262,19 @@ test("200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async 
     assert.equal(response.status === 400 || response.status === 200, true);
 });
 
-test("204 - DELETE:/api/comments/:comment_id - should delete comment and responds with no content", async () => {
+test("ticket-9: 204 - DELETE:/api/comments/:comment_id - should delete comment and responds with no content", async () => {
     await request(app).delete(`/api/comments/1`).expect(204);
 });
 
-test("404 - DELETE:/api/comments/:comment_id - comment not found", async () => {
+test("ticket-9: 404 - DELETE:/api/comments/:comment_id - comment not found", async () => {
     await request(app).delete(`/api/comments/99999`).expect(404);
 });
 
-test("400 - DELETE:/api/comments/:comment_id - invalid comment id", async () => {
+test("ticket-9: 400 - DELETE:/api/comments/:comment_id - invalid comment id", async () => {
     await request(app).delete(`/api/comments/not-an-id`).expect(400);
 });
 
-test("200 - GET:/api/users - responds with array of users", async () => {
+test("ticket-10: 200 - GET:/api/users - responds with array of users", async () => {
     const {
         body: { users },
     } = await request(app).get(`/api/users`).expect(200);
@@ -297,7 +297,7 @@ test("200 - GET:/api/users - responds with array of users", async () => {
     }
 });
 
-test("200 - GET:/api/articles(queries) - accept a sort_by query", async () => {
+test("ticket-11: 200 - GET:/api/articles(queries) - accept a sort_by query", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?sort_by=author`).expect(200);
@@ -307,7 +307,7 @@ test("200 - GET:/api/articles(queries) - accept a sort_by query", async () => {
     assert.equal(articles[2].author, "rogersop");
 });
 
-test("200 - GET:/api/articles(queries) - accept an `order` query", async () => {
+test("ticket-11: 200 - GET:/api/articles(queries) - accept an `order` query", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?order=asc`).expect(200);
@@ -315,7 +315,7 @@ test("200 - GET:/api/articles(queries) - accept an `order` query", async () => {
     assert.equal(articles[0].title, "Z");
 });
 
-test("200 - GET:/api/articles(queries) - accept an `topic` query", async () => {
+test("ticket-11: 200 - GET:/api/articles(queries) - accept an `topic` query", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?topic=mitch`).expect(200);
@@ -326,7 +326,7 @@ test("200 - GET:/api/articles(queries) - accept an `topic` query", async () => {
     }
 });
 
-test("200 - GET:/api/articles(queries) - valid topic with no articles", async () => {
+test("ticket-11: 200 - GET:/api/articles(queries) - valid topic with no articles", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?topic=paper`).expect(200);
@@ -334,26 +334,26 @@ test("200 - GET:/api/articles(queries) - valid topic with no articles", async ()
     assert.equal(articles.length, 0);
 });
 
-test("404 - GET:/api/articles(queries) - 404 when provided a non-existent topic", async () => {
+test("ticket-11: 404 - GET:/api/articles(queries) - 404 when provided a non-existent topic", async () => {
     await request(app).get(`/api/articles?topic=not-a-topic`).expect(404);
 });
 
-test("400 - GET:/api/articles(queries) - 400 when passed invalid sort by column", async () => {
+test("ticket-11: 400 - GET:/api/articles(queries) - 400 when passed invalid sort by column", async () => {
     await request(app).get(`/api/articles?sort_by=not-a-column`).expect(400);
 });
 
-test("400 - GET:/api/articles(queries) - 400 when passed invalid order", async () => {
+test("ticket-11: 400 - GET:/api/articles(queries) - 400 when passed invalid order", async () => {
     await request(app).get(`/api/articles?order=not-an-order`).expect(400);
 });
 
-test("200 -  GET:/api/articles/:article_id(comment_count) - should have comment count", async () => {
+test("ticket-12: 200 -  GET:/api/articles/:article_id(comment_count) - should have comment count", async () => {
     const {
         body: { article },
     } = await request(app).get(`/api/articles/1`).expect(200);
     assert.equal(+article.comment_count, 11);
 });
 
-test("200 -  GET:/api/articles/:article_id(comment_count) - should have comment count even when there are no comments for article", async () => {
+test("ticket-12: 200 -  GET:/api/articles/:article_id(comment_count) - should have comment count even when there are no comments for article", async () => {
     const {
         body: { article },
     } = await request(app).get(`/api/articles/2`).expect(200);

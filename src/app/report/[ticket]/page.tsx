@@ -1,28 +1,35 @@
 import findInRepo from "@/utils/findInRepo";
 
-export default async function Home() {
-    const stream = await fetch("http://localhost:3000/api/test", {
-        next: { revalidate: 0 },
-        method: "GET",
-    });
+type Props = { params: { ticket: string } };
+
+export default async function Home({ params }: Props) {
+    const { ticket } = params;
+
+    const stream = await fetch(
+        `http://localhost:3000/api/test?ticket=${ticket}`,
+        {
+            next: { revalidate: 0 },
+            method: "GET",
+        }
+    );
 
     const parsedStreamData = await stream.json();
 
     const logsFound = await findInRepo(
         "console.log",
-        `${__dirname}/../../../../src/evaluations`
+        `${__dirname}/../../../../../src/evaluations`
     );
     const testOnlysFound = findInRepo(
         "test.only",
-        `${__dirname}/../../../../src/evaluation`
+        `${__dirname}/../../../../../src/evaluation`
     );
     const itOnlysFound = findInRepo(
         "it.only",
-        `${__dirname}/../../../../src/evaluations`
+        `${__dirname}/../../../../../src/evaluations`
     );
     const describeOnlysFound = findInRepo(
         "describe.only",
-        `${__dirname}/../../../../src/evaluations`
+        `${__dirname}/../../../../../src/evaluations`
     );
     const onlysFound = await Promise.all([
         testOnlysFound,

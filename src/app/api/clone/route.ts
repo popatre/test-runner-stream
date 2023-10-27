@@ -8,13 +8,7 @@ export async function GET(request: Request) {
     const branch = searchParams.get("branch");
     const appType = searchParams.get("app");
 
-    await runCommands(
-        "student",
-        repoLink || "",
-        appType || "",
-        branch || "",
-        path
-    );
+    await runCommands(repoLink || "", appType || "", branch || "", path);
 
     return NextResponse.json({ status: 200, msg: "cloned successfully" });
 }

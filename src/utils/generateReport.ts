@@ -3,7 +3,7 @@ import { run } from "node:test";
 
 export default async function generateReport(
     testPath: string,
-    testName?: string | undefined
+    testName?: string | null
 ) {
     const testPattern = testName ? new RegExp(testName) : undefined;
 
