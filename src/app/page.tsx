@@ -45,7 +45,7 @@ export default function page({}: Props) {
 
     return (
         <main className={styles.main}>
-            <h1>BE Test Runner</h1>
+            <h1 className="font-bold text-4xl">BE Test Runner</h1>
             <Form
                 setIsCloned={setIsCloned}
                 setIsLoading={setIsLoading}

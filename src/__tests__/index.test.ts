@@ -20,7 +20,7 @@ beforeEach(() => seed(testData));
 
 after(() => db.end());
 
-test("ticket-3: 404 - GET:/api/topics - not a route/path (could be done as part of any test)", async () => {
+test(`ticket-3: 404 - GET:/api/topics - not a route/path (could be done as part of any test)`, async () => {
     await request(app).get("/api/badroute").expect(404);
 });
 
