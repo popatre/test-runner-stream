@@ -115,18 +115,4 @@ export default async function Home({ params }: Props) {
             </pre>
         </div>
     );
-
-    // const reader = stream.body?.getReader();
-
-    // if (!reader) return <p>something went wrong</p>;
-
-    // return (
-    //     <Suspense fallback={<Loading />}>
-    //         <Reader reader={reader} />
-    //     </Suspense>
-    // );
-}
-
-function Loading() {
-    return <h2>Loading...</h2>;
 }
