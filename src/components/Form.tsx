@@ -62,30 +62,52 @@ function Form({ setIsLoading, setIsCloned, setIsError }: Props) {
     };
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
-            <label>
-                Github repo link:
-                <input value={input.repo} name="repo" onChange={handleChange} />
-            </label>
-            <label>
-                Branch name:
+            <div className="flex-col">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Github repo link:
+                </label>
+                <input
+                    value={input.repo}
+                    name="repo"
+                    onChange={handleChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+            </div>
+            <div className="flex-col">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Branch name:
+                </label>
                 <input
                     type="text"
                     value={input.branch}
                     name="branch"
                     onChange={handleChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
-            </label>
-            <label>
-                App type:
-                <select name="appType" onChange={handleChange}>
+            </div>
+            <div className="flex-col">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    App type:
+                </label>
+                <select
+                    name="appType"
+                    onChange={handleChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
                     <option value="news">NC News</option>
                     {/* <option value="games">NC Games</option> */}
                 </select>
-            </label>
+            </div>
 
-            <label>
-                Select a ticket:
-                <select name="ticket" onChange={handleChange}>
+            <div className="flex-col">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Select a ticket:
+                </label>
+                <select
+                    name="ticket"
+                    onChange={handleChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
                     {ticketOptions.map((ticket) => {
                         return (
                             <option value={ticket.ticketValue}>
@@ -94,7 +116,7 @@ function Form({ setIsLoading, setIsCloned, setIsError }: Props) {
                         );
                     })}
                 </select>
-            </label>
+            </div>
             {isFormComplete() && (
                 <button disabled={!isFormComplete()} className={styles.button}>
                     Get Feedback
