@@ -21,7 +21,7 @@ export default async function Home({ params }: Props) {
     );
     const testOnlysFound = findInRepo(
         "test.only",
-        `${__dirname}/../../../../../src/evaluation`
+        `${__dirname}/../../../../../src/evaluations`
     );
     const itOnlysFound = findInRepo(
         "it.only",
@@ -78,17 +78,26 @@ export default async function Home({ params }: Props) {
                 );
             })}
 
-            <pre className="" style={{ whiteSpace: "pre-wrap" }}>
+            <pre
+                className=""
+                style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+            >
                 <div
                     className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
                         logsFound?.length ? `bg-red-500` : `bg-emerald-400`
                     }`}
                 >
-                    <h2>Console logs found: </h2>
+                    <h2 className="">Console logs found: </h2>
                     {logsFound?.length ? `${logsFound}` : "none"}
                 </div>
             </pre>
-            <pre className="" style={{ whiteSpace: "pre-wrap" }}>
+            <pre
+                className=""
+                style={{
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                }}
+            >
                 <div
                     className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
                         isOnlysPresent(onlysFound)
