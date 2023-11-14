@@ -63,7 +63,7 @@ export default async function Home({ params }: Props) {
                 return (
                     !test.skip && (
                         <div
-                            className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${resultColourStyles}`}
+                            className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto shadow-xl rounded-md ${resultColourStyles}`}
                         >
                             <h2>
                                 {test.failure || test.error ? `❌` : `✅`}{" "}
@@ -83,7 +83,7 @@ export default async function Home({ params }: Props) {
                 style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
             >
                 <div
-                    className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
+                    className={`text-white text-sm font-semibold border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
                         logsFound?.length ? `bg-red-500` : `bg-emerald-400`
                     }`}
                 >
@@ -99,7 +99,7 @@ export default async function Home({ params }: Props) {
                 }}
             >
                 <div
-                    className={`text-white font-semibold text-lg border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
+                    className={`text-white font-semibold border-solid border-black border-2 p-5 my-5 w-1/2 mr-auto ml-auto rounded-md ${
                         isOnlysPresent(onlysFound)
                             ? `bg-red-500`
                             : `bg-emerald-400`
@@ -108,7 +108,7 @@ export default async function Home({ params }: Props) {
                     <h2>.onlys found: </h2>
                     {isOnlysPresent(onlysFound)
                         ? onlysFound.map((result) => {
-                              return <h2>{result}</h2>;
+                              return <h2 className="text-sm">{result}</h2>;
                           })
                         : `✅ none`}
                 </div>
