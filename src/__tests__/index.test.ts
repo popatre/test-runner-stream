@@ -100,6 +100,20 @@ test("ticket-5: 200 - GET:/api/articles - should not contain body property", asy
         assert.equal(article.hasOwnProperty("body"), false, error);
     }
 });
+test("ticket-5: 200 - GET:/api/articles - should have comment count property", async () => {
+    const {
+        body: { articles },
+    } = await request(app).get("/api/articles").expect(200);
+
+    assert.equal(articles.length > 0, true);
+
+    const error = new Error();
+    error.name = "NO COMMENT COUNT";
+
+    for (const article of articles) {
+        assert.equal(article.hasOwnProperty("comment_count"), true, error);
+    }
+});
 test("ticket-5: 200 - GET:/api/articles - sorted by descending date", async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
 
