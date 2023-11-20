@@ -20,11 +20,11 @@ beforeEach(() => seed(testData));
 
 after(() => db.end());
 
-test(`ticket-3: 404 - GET:/api/topics - not a route/path (could be done as part of any test)`, async () => {
+test(`ticket-2: 404 - GET:/api/topics - not a route/path (could be done as part of any test)`, async () => {
     await request(app).get("/api/badroute").expect(404);
 });
 
-test("ticket-3: 200 - GET:/api/topics - respond with list of topics ", async () => {
+test("ticket-2: 200 - GET:/api/topics - respond with list of topics ", async () => {
     const { body } = await request(app).get("/api/topics").expect(200);
     const expected = {
         slug: "mitch",

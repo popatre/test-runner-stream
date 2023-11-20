@@ -1,6 +1,6 @@
 export const ticketOptions = [
     { ticketValue: "all", body: "All tickets" },
-    { ticketValue: "ticket-3", body: "#3 - GET /api/topics" },
+    { ticketValue: "ticket-2", body: "#3 - GET /api/topics" },
     { ticketValue: "ticket-4", body: "#4 - GET /api/articles/:article_id" },
     { ticketValue: "ticket-5", body: "#5 - GET /api/articles" },
     {
