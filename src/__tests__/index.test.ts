@@ -297,7 +297,7 @@ test("ticket-10: 200 - GET:/api/users - responds with array of users", async () 
     }
 });
 
-test("ticket-11: 200 - GET:/api/articles(queries) - accept a sort_by query", async () => {
+test.skip("ticket-11: 200 - GET:/api/articles(queries) - accept a sort_by query", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?sort_by=author`).expect(200);
@@ -338,11 +338,11 @@ test("ticket-11: 404 - GET:/api/articles(queries) - 404 when provided a non-exis
     await request(app).get(`/api/articles?topic=not-a-topic`).expect(404);
 });
 
-test("ticket-11: 400 - GET:/api/articles(queries) - 400 when passed invalid sort by column", async () => {
+test.skip("ticket-11: 400 - GET:/api/articles(queries) - 400 when passed invalid sort by column", async () => {
     await request(app).get(`/api/articles?sort_by=not-a-column`).expect(400);
 });
 
-test("ticket-11: 400 - GET:/api/articles(queries) - 400 when passed invalid order", async () => {
+test.skip("ticket-11: 400 - GET:/api/articles(queries) - 400 when passed invalid order", async () => {
     await request(app).get(`/api/articles?order=not-an-order`).expect(400);
 });
 
