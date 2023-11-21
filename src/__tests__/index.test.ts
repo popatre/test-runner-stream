@@ -267,7 +267,7 @@ test("ticket-8: 400 - PATCH:/api/articles/:article_id - inc votes not an integer
         .expect(400);
 });
 
-test("ticket-8: 200/400 - PATCH:/api/articles/:article_id - inc_votes key missing", async () => {
+test("ticket-8: 200/400 - PATCH:/api/articles/:article_id - inc_votes key missing (OPTIONAL)", async () => {
     const patchBody = { inc_vo: 1 };
     const articleId = 1;
     const response = await request(app)
