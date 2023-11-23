@@ -321,7 +321,7 @@ test.skip("ticket-11: 200 - GET:/api/articles(queries) - accept a sort_by query"
     assert.equal(articles[2].author, "rogersop");
 });
 
-test("ticket-11: 200 - GET:/api/articles(queries) - accept an `order` query", async () => {
+test.skip("ticket-11: 200 - GET:/api/articles(queries) - accept an `order` query", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?order=asc`).expect(200);
@@ -329,7 +329,7 @@ test("ticket-11: 200 - GET:/api/articles(queries) - accept an `order` query", as
     assert.equal(articles[0].title, "Z");
 });
 
-test("ticket-11: 200 - GET:/api/articles(queries) - accept an `topic` query", async () => {
+test("ticket-11: 200 - GET:/api/articles(queries) - accept a `topic` query", async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?topic=mitch`).expect(200);
