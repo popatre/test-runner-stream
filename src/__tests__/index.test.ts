@@ -6,15 +6,19 @@ const request = require("supertest");
 
 const testData = require("./test-server/db/data/test-data/index");
 
-/* to connect to test database
-const seed = require("./test-server/db/seeds/seed");
-const db = require("./test-server/db/connection");
-const app = require("./test-server/app");
-*/
+const isTestMode = process.env.NODE_ENV === "test";
 
-const seed = require("../evaluations/student/db/seeds/seed");
-const db = require("../evaluations/student/db/connection");
-const app = require("../evaluations/student/app");
+const seed = isTestMode
+    ? require("./test-server/db/seeds/seed")
+    : require("../evaluations/student/db/seeds/seed");
+
+const db = isTestMode
+    ? require("./test-server/db/connection")
+    : require("../evaluations/student/db/connection");
+
+const app = isTestMode
+    ? require("./test-server/app")
+    : require("../evaluations/student/app");
 
 beforeEach(() => seed(testData));
 

@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "test": "node --loader tsx --test ./src/__tests__/index.test.ts"
+        "test": "NODE_ENV=test node --loader tsx --test ./src/__tests__/index.test.ts"
     },
     "dependencies": {
         "ai": "^2.2.14",
