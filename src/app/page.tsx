@@ -21,7 +21,7 @@ export default function page({}: Props) {
 
     if (isLoading)
         return (
-            <div>
+            <div className="h-screen flex items-center justify-center font-bold text-xl">
                 <h2>Cloning repo in the cloning lab</h2>
                 <Dna height="80" width="80" ariaLabel="loading" />
             </div>
@@ -29,7 +29,7 @@ export default function page({}: Props) {
 
     if (isCloned)
         return (
-            <div>
+            <div className="h-screen flex items-center justify-center font-bold text-xl">
                 <h1>Testing - You will be redirected soon</h1>
                 <FidgetSpinner
                     visible={true}
