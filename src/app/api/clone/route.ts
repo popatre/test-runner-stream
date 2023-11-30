@@ -12,4 +12,3 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ status: 200, msg: "cloned successfully" });
 }
-//https://github.com/popatre/nc_news

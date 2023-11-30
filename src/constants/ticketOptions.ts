@@ -1,4 +1,4 @@
-export const TICKET_DETAILS = [
+module.exports = [
     { ticketValue: "all", body: "All tickets" },
     { ticketValue: "ticket-2", body: "#2 - GET /api/topics" },
     { ticketValue: "ticket-4", body: "#4 - GET /api/articles/:article_id" },

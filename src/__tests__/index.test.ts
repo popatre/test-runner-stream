@@ -20,6 +20,10 @@ const app = isTestMode
     ? require("./test-server/app")
     : require("../evaluations/student/app");
 
+const TICKET_DETAILS = require("../constants/ticketOptions.ts");
+
+console.log(TICKET_DETAILS);
+
 beforeEach(() => seed(testData));
 
 after(() => db.end());
