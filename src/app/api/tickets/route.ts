@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-const TICKET_DETAILS = require("../../../constants/ticketOptions.ts");
+const { tickets } = require("../../../constants/ticketOptions.ts");
 
 export async function GET(request: Request) {
-    return NextResponse.json({ status: 200, tickets: TICKET_DETAILS });
+    return NextResponse.json({ status: 200, tickets });
 }
-//https://github.com/popatre/nc_news

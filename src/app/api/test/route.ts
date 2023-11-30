@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const ticket = searchParams.get("ticket");
 
     const testSearch = ticket === "all" ? null : `${ticket}:`;
+
     const report = await generateReport(path, testSearch);
 
     return NextResponse.json({ report });
