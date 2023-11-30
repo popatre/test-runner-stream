@@ -10,7 +10,6 @@ import {
 } from "react";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/navigation";
-// import { TICKET_DETAILS } from "@/constants/ticketOptions";
 
 type Props = {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -18,7 +17,7 @@ type Props = {
     setIsError: Dispatch<SetStateAction<boolean>>;
 };
 
-type Ticket = { ticketValue: string; body: string };
+type Ticket = { ticketTestId: string; body: string };
 
 function Form({ setIsLoading, setIsCloned, setIsError }: Props) {
     const [input, setInput] = useState({
@@ -139,8 +138,8 @@ function Form({ setIsLoading, setIsCloned, setIsError }: Props) {
                         {tickets.map((ticket) => {
                             return (
                                 <option
-                                    key={ticket.ticketValue}
-                                    value={ticket.ticketValue}
+                                    key={ticket.ticketTestId}
+                                    value={ticket.ticketTestId}
                                 >
                                     {ticket.body}
                                 </option>

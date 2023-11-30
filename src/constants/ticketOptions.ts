@@ -12,46 +12,45 @@ exports.ticketTestIds = {
 };
 
 exports.tickets = [
-    { ticketValue: "all", body: "All tickets" },
+    { ticketTestId: "all", body: "All tickets" },
     {
-        ticketValue: exports.ticketTestIds.getTopics,
+        ticketTestId: exports.ticketTestIds.getTopics,
         body: "#2 - GET /api/topics",
     },
     {
-        ticketValue: exports.ticketTestIds.articleById,
+        ticketTestId: exports.ticketTestIds.articleById,
         body: "#4 - GET /api/articles/:article_id",
     },
     {
-        ticketValue: exports.ticketTestIds.allArticles,
+        ticketTestId: exports.ticketTestIds.allArticles,
         body: "#5 - GET /api/articles",
     },
     {
-        ticketValue: exports.ticketTestIds.articleComments,
+        ticketTestId: exports.ticketTestIds.articleComments,
         body: "#6 - GET /api/articles/:article_id/comments",
     },
     {
-        ticketValue: exports.ticketTestIds.postComment,
+        ticketTestId: exports.ticketTestIds.postComment,
         body: "#7 - POST /api/articles/:article_id/comments",
     },
     {
-        ticketValue: exports.ticketTestIds.patchVotes,
+        ticketTestId: exports.ticketTestIds.patchVotes,
         body: "#8 - PATCH /api/articles/:article_id",
     },
     {
-        ticketValue: exports.ticketTestIds.deleteComment,
+        ticketTestId: exports.ticketTestIds.deleteComment,
         body: "#9 - DELETE /api/comments/:comment_id",
     },
     {
-        ticketValue: exports.ticketTestIds.getUsers,
+        ticketTestId: exports.ticketTestIds.getUsers,
         body: "#10 - GET /api/users",
     },
     {
-        ticketValue: exports.ticketTestIds.queries,
+        ticketTestId: exports.ticketTestIds.queries,
         body: "#11 - GET /api/articles(queries)",
     },
     {
-        ticketValue: exports.ticketTestIds.articleCC,
+        ticketTestId: exports.ticketTestIds.articleCC,
         body: "#12 - GET /api/articles/:article_id (comment_count)",
     },
 ];
-// ticket id
