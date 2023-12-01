@@ -20,19 +20,19 @@ const app = isTestMode
     ? require("./test-server/app")
     : require("../evaluations/student/app");
 
-const { ticketTestIds } = require("../constants/ticketOptions.ts");
+const { TICKET_TEST_IDS } = require("../constants/ticketOptions.ts");
 
-console.log(ticketTestIds);
+console.log(TICKET_TEST_IDS);
 
 beforeEach(() => seed(testData));
 
 after(() => db.end());
 
-test(`${ticketTestIds.getTopics}: 404 - GET:/api/topics - not a route/path (could be done as part of any test)`, async () => {
+test(`${TICKET_TEST_IDS.getTopics}: 404 - GET:/api/topics - not a route/path (could be done as part of any test)`, async () => {
     await request(app).get("/api/badroute").expect(404);
 });
 
-test(`${ticketTestIds.getTopics}: 200 - GET:/api/topics - respond with list of topics `, async () => {
+test(`${TICKET_TEST_IDS.getTopics}: 200 - GET:/api/topics - respond with list of topics `, async () => {
     const { body } = await request(app).get("/api/topics").expect(200);
     const expected = {
         slug: "mitch",
@@ -42,7 +42,7 @@ test(`${ticketTestIds.getTopics}: 200 - GET:/api/topics - respond with list of t
     assert.equal(body.topics.length, 3);
 });
 
-test(`${ticketTestIds.articleById}: 200 - GET:/api/articles/:article_id - returns articles object correctly based on id `, async () => {
+test(`${TICKET_TEST_IDS.articleById}: 200 - GET:/api/articles/:article_id - returns articles object correctly based on id `, async () => {
     const {
         body: { article },
     } = await request(app).get("/api/articles/1").expect(200);
@@ -65,21 +65,21 @@ test(`${ticketTestIds.articleById}: 200 - GET:/api/articles/:article_id - return
     assert.equal(article.topic, expected.topic);
 });
 
-test(`${ticketTestIds.articleById}: 404 - GET:/api/articles/:article_id - return 404 for article not found`, async () => {
+test(`${TICKET_TEST_IDS.articleById}: 404 - GET:/api/articles/:article_id - return 404 for article not found`, async () => {
     await request(app).get("/api/articles/1000000").expect(404);
 });
 
-test(`${ticketTestIds.articleById}: 400 - GET:/api/articles/:article_id - return 400 bad article id request`, async () => {
+test(`${TICKET_TEST_IDS.articleById}: 400 - GET:/api/articles/:article_id - return 400 bad article id request`, async () => {
     await request(app).get("/api/articles/not-an-id").expect(400);
 });
 
-test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should respond with articles array`, async () => {
+test(`${TICKET_TEST_IDS.allArticles}: 200 - GET:/api/articles - should respond with articles array`, async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     const isArray = Array.isArray(body.articles);
     assert.equal(isArray, true);
 });
 
-test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should respond with all articles`, async () => {
+test(`${TICKET_TEST_IDS.allArticles}: 200 - GET:/api/articles - should respond with all articles`, async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
     assert.equal(body.articles.length > 0, true);
 
@@ -94,7 +94,7 @@ test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should respond wit
     }
 });
 
-test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should not contain body property`, async () => {
+test(`${TICKET_TEST_IDS.allArticles}: 200 - GET:/api/articles - should not contain body property`, async () => {
     const {
         body: { articles },
     } = await request(app).get("/api/articles").expect(200);
@@ -108,7 +108,7 @@ test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should not contain
         assert.equal(article.hasOwnProperty("body"), false, error);
     }
 });
-test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should have comment count property`, async () => {
+test(`${TICKET_TEST_IDS.allArticles}: 200 - GET:/api/articles - should have comment count property`, async () => {
     const {
         body: { articles },
     } = await request(app).get("/api/articles").expect(200);
@@ -122,17 +122,25 @@ test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - should have commen
         assert.equal(article.hasOwnProperty("comment_count"), true, error);
     }
 });
-test(`${ticketTestIds.allArticles}: 200 - GET:/api/articles - sorted by descending date`, async () => {
+test(`${TICKET_TEST_IDS.allArticles}: 200 - GET:/api/articles - sorted by descending date`, async () => {
     const { body } = await request(app).get("/api/articles").expect(200);
 
     assert.equal(body.articles[0].article_id, 3);
+
+    const expectedOrder = [...body.articles].toSorted((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        return +dateB - +dateA;
+    });
+
+    assert.deepStrictEqual(body.articles, expectedOrder);
 });
 
-test(`${ticketTestIds.articleComments}: 200 - GET:/api/articles/:article_id/comments - status 200`, async () => {
+test(`${TICKET_TEST_IDS.articleComments}: 200 - GET:/api/articles/:article_id/comments - status 200`, async () => {
     await request(app).get("/api/articles/1/comments").expect(200);
 });
 
-test(`${ticketTestIds.articleComments}: 200 - GET:/api/articles/:article_id/comments - should respond with comments arrays`, async () => {
+test(`${TICKET_TEST_IDS.articleComments}: 200 - GET:/api/articles/:article_id/comments - should respond with comments arrays`, async () => {
     const {
         body: { comments },
     } = await request(app).get("/api/articles/1/comments").expect(200);
@@ -149,7 +157,7 @@ test(`${ticketTestIds.articleComments}: 200 - GET:/api/articles/:article_id/comm
     }
 });
 
-test(`${ticketTestIds.articleComments}: 200 - GET:/api/articles/:article_id/comments - serve an empty array when the article exists but has no comments`, async () => {
+test(`${TICKET_TEST_IDS.articleComments}: 200 - GET:/api/articles/:article_id/comments - serve an empty array when the article exists but has no comments`, async () => {
     const {
         body: { comments },
     } = await request(app).get("/api/articles/2/comments").expect(200);
@@ -158,15 +166,15 @@ test(`${ticketTestIds.articleComments}: 200 - GET:/api/articles/:article_id/comm
     assert.equal(comments.length, 0);
 });
 
-test(`${ticketTestIds.articleComments}: 404 - GET:/api/articles/:article_id/comments - Not Found when given a valid article_id not in db`, async () => {
+test(`${TICKET_TEST_IDS.articleComments}: 404 - GET:/api/articles/:article_id/comments - Not Found when given a valid article_id not in db`, async () => {
     await request(app).get("/api/articles/999999/comments").expect(404);
 });
 
-test(`${ticketTestIds.articleComments}: 400 - GET:/api/articles/:article_id/comments - Bad Request when given an invalid article_id`, async () => {
+test(`${TICKET_TEST_IDS.articleComments}: 400 - GET:/api/articles/:article_id/comments - Bad Request when given an invalid article_id`, async () => {
     await request(app).get("/api/articles/not-an-id/comments").expect(400);
 });
 
-test(`${ticketTestIds.postComment}: 201 - POST:/api/articles/:article_id/comments - should post and respond with new comment`, async () => {
+test(`${TICKET_TEST_IDS.postComment}: 201 - POST:/api/articles/:article_id/comments - should post and respond with new comment`, async () => {
     const postBody = { username: "butter_bridge", body: "this is a comment" };
     const articleId = 1;
     const {
@@ -187,7 +195,7 @@ test(`${ticketTestIds.postComment}: 201 - POST:/api/articles/:article_id/comment
     assert.equal(comment.votes, 0);
 });
 
-test(`${ticketTestIds.postComment}: 404 - POST:/api/articles/:article_id/comments - username not found`, async () => {
+test(`${TICKET_TEST_IDS.postComment}: 404 - POST:/api/articles/:article_id/comments - username not found`, async () => {
     const postBody = { username: "notUser", body: "this is a comment" };
     const articleId = 1;
     await request(app)
@@ -196,7 +204,7 @@ test(`${ticketTestIds.postComment}: 404 - POST:/api/articles/:article_id/comment
         .expect(404);
 });
 
-test(`${ticketTestIds.postComment}: 404 - POST:/api/articles/:article_id/comments - article not found`, async () => {
+test(`${TICKET_TEST_IDS.postComment}: 404 - POST:/api/articles/:article_id/comments - article not found`, async () => {
     const postBody = { username: "butter_bridge", body: "this is a comment" };
     const articleId = 99999;
     await request(app)
@@ -205,7 +213,7 @@ test(`${ticketTestIds.postComment}: 404 - POST:/api/articles/:article_id/comment
         .expect(404);
 });
 
-test(`${ticketTestIds.postComment}: 400 - POST:/api/articles/:article_id/comments - invalid article id`, async () => {
+test(`${TICKET_TEST_IDS.postComment}: 400 - POST:/api/articles/:article_id/comments - invalid article id`, async () => {
     const postBody = { username: "butter_bridge", body: "this is a comment" };
     const articleId = "not-an-id";
     await request(app)
@@ -214,7 +222,7 @@ test(`${ticketTestIds.postComment}: 400 - POST:/api/articles/:article_id/comment
         .expect(400);
 });
 
-test(`${ticketTestIds.postComment}: 400 - POST:/api/articles/:article_id/comments - missing required field`, async () => {
+test(`${TICKET_TEST_IDS.postComment}: 400 - POST:/api/articles/:article_id/comments - missing required field`, async () => {
     const postBody = { username: "butter_bridge" };
     const articleId = "not-an-id";
     await request(app)
@@ -223,7 +231,7 @@ test(`${ticketTestIds.postComment}: 400 - POST:/api/articles/:article_id/comment
         .expect(400);
 });
 
-test(`${ticketTestIds.patchVotes}: 200 - PATCH:/api/articles/:article_id - should increment votes and respond with article`, async () => {
+test(`${TICKET_TEST_IDS.patchVotes}: 200 - PATCH:/api/articles/:article_id - should increment votes and respond with article`, async () => {
     const patchBody = { inc_votes: 1 };
     const articleId = 1;
     const {
@@ -236,7 +244,7 @@ test(`${ticketTestIds.patchVotes}: 200 - PATCH:/api/articles/:article_id - shoul
     assert.equal(article.votes, 101);
 });
 
-test(`${ticketTestIds.patchVotes}: 200 - PATCH:/api/articles/:article_id - should decrement votes and respond with article`, async () => {
+test(`${TICKET_TEST_IDS.patchVotes}: 200 - PATCH:/api/articles/:article_id - should decrement votes and respond with article`, async () => {
     const patchBody = { inc_votes: -1 };
     const articleId = 1;
     const {
@@ -249,7 +257,7 @@ test(`${ticketTestIds.patchVotes}: 200 - PATCH:/api/articles/:article_id - shoul
     assert.equal(article.votes, 99);
 });
 
-test(`${ticketTestIds.patchVotes}: 404 - PATCH:/api/articles/:article_id - article not found`, async () => {
+test(`${TICKET_TEST_IDS.patchVotes}: 404 - PATCH:/api/articles/:article_id - article not found`, async () => {
     const patchBody = { inc_votes: 1 };
     const articleId = 99999;
     await request(app)
@@ -257,7 +265,7 @@ test(`${ticketTestIds.patchVotes}: 404 - PATCH:/api/articles/:article_id - artic
         .send(patchBody)
         .expect(404);
 });
-test(`${ticketTestIds.patchVotes}: 400 - PATCH:/api/articles/:article_id - invalid id`, async () => {
+test(`${TICKET_TEST_IDS.patchVotes}: 400 - PATCH:/api/articles/:article_id - invalid id`, async () => {
     const patchBody = { inc_votes: 1 };
     const articleId = "not-an-id";
     await request(app)
@@ -266,7 +274,7 @@ test(`${ticketTestIds.patchVotes}: 400 - PATCH:/api/articles/:article_id - inval
         .expect(400);
 });
 
-test(`${ticketTestIds.patchVotes}: 400 - PATCH:/api/articles/:article_id - inc votes not an integer`, async () => {
+test(`${TICKET_TEST_IDS.patchVotes}: 400 - PATCH:/api/articles/:article_id - inc votes not an integer`, async () => {
     const patchBody = { inc_votes: "hello" };
     const articleId = 1;
     await request(app)
@@ -275,7 +283,7 @@ test(`${ticketTestIds.patchVotes}: 400 - PATCH:/api/articles/:article_id - inc v
         .expect(400);
 });
 
-test(`${ticketTestIds.patchVotes}: 200/400 - PATCH:/api/articles/:article_id - inc_votes key missing (OPTIONAL)`, async () => {
+test(`${TICKET_TEST_IDS.patchVotes}: 200/400 - PATCH:/api/articles/:article_id - inc_votes key missing (OPTIONAL)`, async () => {
     const patchBody = { inc_vo: 1 };
     const articleId = 1;
     const response = await request(app)
@@ -284,19 +292,19 @@ test(`${ticketTestIds.patchVotes}: 200/400 - PATCH:/api/articles/:article_id - i
     assert.equal(response.status === 400 || response.status === 200, true);
 });
 
-test(`${ticketTestIds.deleteComment}: 204 - DELETE:/api/comments/:comment_id - should delete comment and responds with no content`, async () => {
+test(`${TICKET_TEST_IDS.deleteComment}: 204 - DELETE:/api/comments/:comment_id - should delete comment and responds with no content`, async () => {
     await request(app).delete(`/api/comments/1`).expect(204);
 });
 
-test(`${ticketTestIds.deleteComment}: 404 - DELETE:/api/comments/:comment_id - comment not found`, async () => {
+test(`${TICKET_TEST_IDS.deleteComment}: 404 - DELETE:/api/comments/:comment_id - comment not found`, async () => {
     await request(app).delete(`/api/comments/99999`).expect(404);
 });
 
-test(`${ticketTestIds.deleteComment}: 400 - DELETE:/api/comments/:comment_id - invalid comment id`, async () => {
+test(`${TICKET_TEST_IDS.deleteComment}: 400 - DELETE:/api/comments/:comment_id - invalid comment id`, async () => {
     await request(app).delete(`/api/comments/not-an-id`).expect(400);
 });
 
-test(`${ticketTestIds.getUsers}: 200 - GET:/api/users - responds with array of users`, async () => {
+test(`${TICKET_TEST_IDS.getUsers}: 200 - GET:/api/users - responds with array of users`, async () => {
     const {
         body: { users },
     } = await request(app).get(`/api/users`).expect(200);
@@ -319,7 +327,7 @@ test(`${ticketTestIds.getUsers}: 200 - GET:/api/users - responds with array of u
     }
 });
 
-test.skip(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - accept a sort_by query`, async () => {
+test.skip(`${TICKET_TEST_IDS.queries}: 200 - GET:/api/articles(queries) - accept a sort_by query`, async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?sort_by=author`).expect(200);
@@ -329,7 +337,7 @@ test.skip(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - accept a
     assert.equal(articles[2].author, "rogersop");
 });
 
-test.skip(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - accept an order query`, async () => {
+test.skip(`${TICKET_TEST_IDS.queries}: 200 - GET:/api/articles(queries) - accept an order query`, async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?order=asc`).expect(200);
@@ -337,7 +345,7 @@ test.skip(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - accept a
     assert.equal(articles[0].title, "Z");
 });
 
-test(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - accept a topic query`, async () => {
+test(`${TICKET_TEST_IDS.queries}: 200 - GET:/api/articles(queries) - accept a topic query`, async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?topic=mitch`).expect(200);
@@ -348,7 +356,7 @@ test(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - accept a topi
     }
 });
 
-test(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - valid topic with no articles`, async () => {
+test(`${TICKET_TEST_IDS.queries}: 200 - GET:/api/articles(queries) - valid topic with no articles`, async () => {
     const {
         body: { articles },
     } = await request(app).get(`/api/articles?topic=paper`).expect(200);
@@ -356,26 +364,26 @@ test(`${ticketTestIds.queries}: 200 - GET:/api/articles(queries) - valid topic w
     assert.equal(articles.length, 0);
 });
 
-test(`${ticketTestIds.queries}: 404 - GET:/api/articles(queries) - 404 when provided a non-existent topic`, async () => {
+test(`${TICKET_TEST_IDS.queries}: 404 - GET:/api/articles(queries) - 404 when provided a non-existent topic`, async () => {
     await request(app).get(`/api/articles?topic=not-a-topic`).expect(404);
 });
 
-test.skip(`${ticketTestIds.queries}: 400 - GET:/api/articles(queries) - 400 when passed invalid sort by column`, async () => {
+test.skip(`${TICKET_TEST_IDS.queries}: 400 - GET:/api/articles(queries) - 400 when passed invalid sort by column`, async () => {
     await request(app).get(`/api/articles?sort_by=not-a-column`).expect(400);
 });
 
-test.skip(`${ticketTestIds.queries}: 400 - GET:/api/articles(queries) - 400 when passed invalid order`, async () => {
+test.skip(`${TICKET_TEST_IDS.queries}: 400 - GET:/api/articles(queries) - 400 when passed invalid order`, async () => {
     await request(app).get(`/api/articles?order=not-an-order`).expect(400);
 });
 
-test(`${ticketTestIds.articleCC}: 200 -  GET:/api/articles/:article_id(comment_count) - should have comment count`, async () => {
+test(`${TICKET_TEST_IDS.articleCC}: 200 -  GET:/api/articles/:article_id(comment_count) - should have comment count`, async () => {
     const {
         body: { article },
     } = await request(app).get(`/api/articles/1`).expect(200);
     assert.equal(+article.comment_count, 11);
 });
 
-test(`${ticketTestIds.articleCC}: 200 -  GET:/api/articles/:article_id(comment_count) - should have comment count even when there are no comments for article`, async () => {
+test(`${TICKET_TEST_IDS.articleCC}: 200 -  GET:/api/articles/:article_id(comment_count) - should have comment count even when there are no comments for article`, async () => {
     const {
         body: { article },
     } = await request(app).get(`/api/articles/2`).expect(200);
